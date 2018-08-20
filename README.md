@@ -1,41 +1,41 @@
-# TurtleCoin RPC API
+# Plenteum RPC API
 
-This project is designed to make it very easy to interact with various RPC APIs available within the [TurtleCoin](https://turtlecoin.lol) Project. This entire project uses [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) to make things fast, easy, and safe.
+This project is designed to make it very easy to interact with various RPC APIs available within the [Plenteum](https://www.plenteum.com) Project. This entire project uses [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) to make things fast, easy, and safe.
 
 ## Table of Contents
 
 1. [Installation](#installation)
 2. [Intialization](#intialization)
-3. [TurtleCoind RPC API Interface](#turtlecoind-rpc-api-interface)
+3. [Plenteumd RPC API Interface](#plenteumd-rpc-api-interface)
 4. [Walletd/Service RPC API Interface](#walletd-rpc-api-interface)
 5. [Client RPC API Interface](#client-rpc-api-interface)
 
 ## Installation
 
 ```bash
-npm install turtlecoin-rpc
+npm install plenteum-rpc
 ```
 
 ## Intialization
 
-### TurtleCoind
+### Plenteumd
 ```javascript
-const TurtleCoind = require('turtlecoin-rpc').TurtleCoind
+const Plenteumd = require('plenteum-rpc').Plenteumd
 
-const daemon = new TurtleCoind({
-  host: '127.0.0.1', // ip address or hostname of the TurtleCoind host
-  port: 11898, // what port is the RPC server running on
+const daemon = new Plenteumd({
+  host: '127.0.0.1', // ip address or hostname of the Plenteumd host
+  port: 44016, // what port is the RPC server running on
   timeout: 2000 // request timeout
 })
 ```
 
 ### Walletd
 ```javascript
-const Walletd = require('turtlecoin-rpc').Walletd
+const Walletd = require('plenteum-rpc').Walletd
 
 const wallet = new Walletd({
   host: '127.0.0.1', // ip address or hostname of the walletd host
-  port: 11898, // what port is walletd running on
+  port: 8070, // what port is walletd running on
   timeout: 2000, // request timeout
   rpcPassword: 'changeme', // must be set to the password used to run walletd
   
@@ -52,18 +52,18 @@ const wallet = new Walletd({
 
 ### Client
 ```javascript
-const Client = require('turtlecoin-rpc').Client
+const Client = require('plenteum-rpc').Client
 
 const client = new Client({
-  host: '127.0.0.1', // ip address or hostname of the TurtleCoind host
-  port: 11898, // what port is the RPC server running on
+  host: '127.0.0.1', // ip address or hostname of the Plenteumd host
+  port: 44016, // what port is the RPC server running on
   timeout: 2000 // request timeout
 })
 ```
 
-## TurtleCoind RPC API Interface
+## Plenteumd RPC API Interface
 
-We expose all of the TurtleCoind RPC API commands via the ```TurtleCoind``` interface. Each of the below methods are [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises). For safety sake, **always** handle your promise catches as we do use them properly.
+We expose all of the Plenteumd RPC API commands via the ```Plenteumd``` interface. Each of the below methods are [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises). For safety sake, **always** handle your promise catches as we do use them properly.
 
 Methods noted having options have parameters that may be *optional* or *required* as documented.
 
@@ -1437,7 +1437,7 @@ TRTLTyPSXMZB5j2wbztMzRXu2rVCuNVLUb4WKARRZY9ficYWshMDy7p4MXEz24mkyb4KFDVksDj41XTJ
 
 ## Client RPC API Interface
 
-We expose all of the TurtleCoind Client RPC API commands via the ```Client``` interface. Each of the below methods are [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises). For safety sake, **always** handle your promise catches as we do use them properly.
+We expose all of the Plenteumd Client RPC API commands via the ```Client``` interface. Each of the below methods are [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises). For safety sake, **always** handle your promise catches as we do use them properly.
 
 Methods noted having options have parameters that may be *optional* or *required* as documented.
 
@@ -2940,6 +2940,7 @@ client.getTransactionHashesByPaymentId({
 
 ```
 Copyright (C) 2018 Brandon Lehmann, The TurtleCoin Developers
+Copyright (C) 2018 The Plenteum Developers
 
 Please see the included LICENSE file for more information.
 ```
