@@ -4,7 +4,7 @@
 
 # Plenteum RPC API
 
-This project is designed to make it very easy to interact with various RPC APIs available within the [Plenteum](https://plenteum.lol) Project. This entire project uses [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) to make things fast, easy, and safe.
+This project is designed to make it very easy to interact with various RPC APIs available within the [Plenteum](https://www.plenteum.com) Project. This entire project uses [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) to make things fast, easy, and safe.
 
 ## Table of Contents
 
