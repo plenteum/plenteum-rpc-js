@@ -1,14 +1,23 @@
+[![NPM](https://nodei.co/npm/plenteum-rpc.png?downloads=true&stars=true)](https://nodei.co/npm/plenteum-rpc/)
+
+[![Build Status](https://travis-ci.org/plenteum/plenteum-rpc.png?branch=master)](https://travis-ci.org/plenteum/plenteum-rpc) [![Build Status](https://ci.appveyor.com/api/projects/status/github/plenteum/plenteum-rpc?branch=master&svg=true)](https://ci.appveyor.com/project/plenteum/plenteum-rpc/branch/master)
+
 # Plenteum RPC API
 
-This project is designed to make it very easy to interact with various RPC APIs available within the [Plenteum](https://www.plenteum.com) Project. This entire project uses [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) to make things fast, easy, and safe.
+This project is designed to make it very easy to interact with various RPC APIs available within the [Plenteum](https://plenteum.lol) Project. This entire project uses [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) to make things fast, easy, and safe.
 
 ## Table of Contents
 
-1. [Installation](#installation)
-2. [Intialization](#intialization)
-3. [Plenteumd RPC API Interface](#plenteumd-rpc-api-interface)
-4. [Walletd/Service RPC API Interface](#walletd-rpc-api-interface)
-5. [Client RPC API Interface](#client-rpc-api-interface)
+1. [Dependencies](#dependencies)
+2. [Installation](#installation)
+3. [Intialization](#intialization)
+4. [Plenteumd RPC API Interface](#plenteumd-rpc-api-interface)
+5. [WalletService RPC API Interface](#wallet-service-rpc-api-interface)
+
+## Dependencies
+
+* [NodeJS v8.x](https://nodejs.org) >= 8.x
+* [Plenteum](https://github.com/plenteum/plenteum/releases) >= v0.3.0
 
 ## Installation
 
@@ -25,25 +34,27 @@ const Plenteumd = require('plenteum-rpc').Plenteumd
 const daemon = new Plenteumd({
   host: '127.0.0.1', // ip address or hostname of the Plenteumd host
   port: 44016, // what port is the RPC server running on
-  timeout: 2000 // request timeout
+  timeout: 2000, // request timeout
+  ssl: false // whether we need to connect using SSL/TLS
 })
 ```
 
-### Walletd
+### WalletService
 ```javascript
-const Walletd = require('plenteum-rpc').Walletd
+const WalletService = require('plenteum-rpc').WalletService
 
-const wallet = new Walletd({
-  host: '127.0.0.1', // ip address or hostname of the walletd host
-  port: 8070, // what port is walletd running on
+const service = new WalletService({
+  host: '127.0.0.1', // ip address or hostname of the wallet-service host
+  port: 8070, // what port is wallet-service running on
   timeout: 2000, // request timeout
-  rpcPassword: 'changeme', // must be set to the password used to run walletd
-  
+  ssl: false, // whether we need to connect using SSL/TLS
+  rpcPassword: 'changeme', // must be set to the password used to run wallet-service
+
   // RPC API default values
-  defaultMixin: 6, // the default mixin to use for transactions
-  defaultFee: 0.1, // the default transaction fee for transactions
+  defaultMixin: false, // the default mixin to use for transactions, the default setting is false which means we don't have a default value
+  defaultFee: 0, // the default transaction fee for transactions
   defaultBlockCount: 1, // the default number of blocks when blockCount is required
-  decimalDivisor: 100, // Currency has many decimal places?
+  decimalDivisor: 100000000, // Currency has many decimal places?
   defaultFirstBlockIndex: 1, // the default first block index we will use when it is required
   defaultUnlockTime: 0, // the default unlockTime for transactions
   defaultFusionThreshold: 10000000, // the default fusionThreshold for fusion transactions
@@ -57,13 +68,14 @@ const Client = require('plenteum-rpc').Client
 const client = new Client({
   host: '127.0.0.1', // ip address or hostname of the Plenteumd host
   port: 44016, // what port is the RPC server running on
-  timeout: 2000 // request timeout
+  timeout: 2000, // request timeout
+  ssl: false // whether we need to connect using SSL/TLS
 })
 ```
 
 ## Plenteumd RPC API Interface
 
-We expose all of the Plenteumd RPC API commands via the ```Plenteumd``` interface. Each of the below methods are [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises). For safety sake, **always** handle your promise catches as we do use them properly.
+We expose all of the `Plenteumd` RPC API commands via the ```Plenteumd``` interface. Each of the below methods are [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises). For safety sake, **always** handle your promise catches as we do use them properly.
 
 Methods noted having options have parameters that may be *optional* or *required* as documented.
 
@@ -441,7 +453,7 @@ daemon.getBlockHash({
 ```javascript
 daemon.getBlockTemplate({
   reserveSize: 200,
-  walletAddress: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
+  walletAddress: 'PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5'
 }).then((blockTemplate) => {
   // do something
 })
@@ -472,6 +484,32 @@ daemon.getBlockTemplate({
 ```javascript
 daemon.submitBlock({
   blockBlob: '...'
+}).then((result) => {
+  // do something
+})
+```
+
+#### Sample Data
+
+```javascript
+{
+  "status": "OK"
+}
+```
+
+### daemon.sendRawTransaction(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|tx|Yes|Raw serialized transaction|string|
+
+#### Example Code
+
+```javascript
+daemon.sendRawTransaction({
+  tx: '...'
 }).then((result) => {
   // do something
 })
@@ -616,12 +654,12 @@ daemon.getCurrencyId().then((result) => {
 7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c
 ```
 
-### daemon.getHeight()
+### daemon.height()
 
 #### Example Code
 
 ```javascript
-daemon.getHeight().then((result) => {
+daemon.height().then((result) => {
   // do something
 })
 ```
@@ -636,12 +674,12 @@ daemon.getHeight().then((result) => {
 }
 ```
 
-### daemon.getInfo()
+### daemon.info()
 
 #### Example Code
 
 ```javascript
-daemon.getInfo().then((result) => {
+daemon.info().then((result) => {
   // do something
 })
 ```
@@ -668,32 +706,17 @@ daemon.getInfo().then((result) => {
 }
 ```
 
-### daemon.feeInfo()
-
-#### Example Code
-
-```javascript
-daemon.feeInfo().then((result) => {
-  // do something
-})
-```
-
-#### Sample Data
-
-```javascript
-{
-"address":"TRTLux9QBmzCYEGgdWXHEQCAm6vY9vZHkbGmx8ev5LxhYk8N71Pp7PWFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJZ25i9n",
-"amount": 5000,
-"status": "OK"
-}
-```
-
 ### daemon.getTransactions()
 
 #### Example Code
 
 ```javascript
-daemon.getTransactions().then((result) => {
+daemon.getTransactions({
+  hashes: [
+    '549828e75151982b0e51b27e8f53b26ebc174f0ef78063984c8952b13e2a3564',
+    '549828e75151982b0e51b27e8f53b26ebc174f0ef78063984c8952b13e2a3563'
+  ]
+}).then((result) => {
   // do something
 })
 ```
@@ -702,18 +725,22 @@ daemon.getTransactions().then((result) => {
 
 ```javascript
 {
-  "missed_tx": [],
+  "missed_tx": [
+    "549828e75151982b0e51b27e8f53b26ebc174f0ef78063984c8952b13e2a3563"
+  ],
   "status": "OK",
-  "txs_as_hex": []
+  "txs_as_hex": [
+    "01000a023204e7b6...584248728d0c"
+  ]
 }
 ```
 
-### daemon.getPeers()
+### daemon.peers()
 
 #### Example Code
 
 ```javascript
-daemon.getPeers().then((result) => {
+daemon.peers().then((result) => {
   // do something
 })
 ```
@@ -733,12 +760,12 @@ daemon.getPeers().then((result) => {
 }
 ```
 
-### daemon.feeInfo()
+### daemon.fee()
 
 #### Example Code
 
 ```javascript
-daemon.feeInfo().then((result) => {
+daemon.fee().then((result) => {
   // do something
 })
 ```
@@ -747,711 +774,27 @@ daemon.feeInfo().then((result) => {
 
 ```javascript
 {
-  "address": "TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ",
+  "address": "PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5",
   "amount": 100,
   "status": "OK"
 }
 ```
 
-## Walletd RPC API Interface
-
-We expose all of the walletd RPC API commands via the ```Walletd``` interface. Each of the below methods are [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises). For safety sake, **always** handle your promise catches as we do use them properly.
-
-***Special Note:*** Any and all amounts/fees will already be in HUMAN readable units. DO NOT DIVIDE THEM AGAIN unless you've specified ```decimalDivisor``` as ```1``` in the options. You have been warned.
-
-Unless otherwise noted, all methods will resolve the promise upon success and sample return data is supplied below. Any errors will reject the promise with an error condition.
-
-Methods noted having options have parameters that may be *optional* or *required* as documented.
-
-### wallet.reset(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|viewSecretKey|No|The secret key to reset|string|
-
-#### Example Code
-
-```javascript
-wallet.reset({
-  viewSecretKey: '12345678901234567890'
-}).then(() => {
-  // do something
-})
-```
-
-### wallet.save()
-
-#### Example Code
-
-```javascript
-wallet.save().then(() => {
-  // do something
-})
-```
-
-### wallet.getViewKey()
-
-#### Example Code
-
-```javascript
-wallet.getViewKey().then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "viewSecretKey": "12345678901234567890"
-}
-```
-
-### wallet.getSpendKeys(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|address|Yes|Public wallet address|string|
-
-#### Example Code
-
-```javascript
-wallet.getSpendKeys({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "spendPublicKey": "9e50b808f1e2522b7c6feddd8e2f6cdcd89ff33b623412de2061d78c84588eff33b6d9",
-  "spendSecretKey": "c6639a75a37f63f92e2f096fa262155c943b4fdc243ffb02b8178ab960bb5d0f"
-}
-```
-
-### wallet.getMnemonicSeed(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|address|Yes|Public wallet address|string|
-
-#### Example Code
-
-```javascript
-wallet.getMnemonicSeed({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```text
-river nudged peculiar ailments waking null tossed anchor erase jive eavesdrop veered truth wield stacking tattoo unplugs oven wipeout aptitude estate dazed observant oxygen oxygen
-```
-
-### wallet.getStatus()
-
-#### Example Code
-
-```javascript
-wallet.getStatus().then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "blockCount": 491214,
-  "knownBlockCount": 491215,
-  "lastBlockHash": "fc33b0fcdb8a3ed8e2de3cb36df325d67e9926d59f02d164baacf3ddefe8df12",
-  "peerCount": 8
-}
-```
-
-### wallet.getAddresses()
-
-#### Example Code
-
-```javascript
-wallet.getAddresses().then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-[
-  "TRTLux9QBmzCYEGgdWXHEQCAm6vY9vZHkbGmx8ev5LxhYk8N71Pp7PWFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJZ25i9n",
-  "TRTLv1mPerM2ckUuNvxrkzDE7QKd9PFVUXYbVfbvx8YxB5BYEdSqQvUFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJbQMVgF"
-]
-```
-
-### wallet.createAddress(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|secretSpendKey|No|Address secret spend key|string|
-|publicSpendKey|No|Address public spend key|string|
-
-**Note:** Both ```secretSpendKey``` and ```publicSpendKey``` are optional; however, you can only supply one or the other. Both are given below as **examples**.
-
-#### Example Code
-
-```javascript
-wallet.createAddress({
-  secretSpendKey: 'c6639a75a37f63f92e2f096fa262155c943b4fdc243ffb02b8178ab960bb5d0f',
-  publicSpendKey: '9e50b808f1e2522b7c6feddd8e2f6cdcd89ff33b623412de2061d78c84588eff33b6d9'
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "address": "TRTLv3rnGMvAdUUPZZxUmm2jSe8j9U4EfXoAzT3NByLTKD4foK6JuH2FYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJYidUqc"
-}
-```
-
-### wallet.deleteAddress(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|address|No|Public wallet address|string|
-
-#### Example Code
-
-```javascript
-wallet.deleteAddress({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
-}).then((result) => {
-  // do something
-})
-```
-
-### wallet.getBalance(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|address|No|Public wallet address|string|
-
-#### Example Code
-
-```javascript
-wallet.getBalance({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "availableBalance": 60021.54,
-  "lockedAmount": 0
-}
-```
-
-### wallet.getBlockHashes(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|firstBlockIndex|Yes|The height of the blockchain to start at|integer|
-|blockCount|Yes|How many blocks to return at maximum|integer|
-
-#### Example Code
-
-```javascript
-wallet.getBlockHashes({
-  firstBlockIndex: 500000,
-  blockCount: 10
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "blockHashes": [
-    "8c9738f961a278486f27ce214d1e4d67e08f7400c8b38fe00cdd571a8d302c7d",
-    "2ef060801dd27327533580cfa538849f9e1968d13418f2dd2535774a8c494bf4",
-    "3ac40c464986437dafe9057f73780e1a3a6cd2f90e0c5fa69c5caab80556a68a",
-    "ac821fcb9e9c903abe494bbd2c8f3333602ebdb2f0a98519fc84899906a7f52b",
-    "4dcffeea7aec064ec5c03e1cb6cf58265a2b76c4f2db9e5fc4afbaf967b77bba",
-    "1b82b0df589cb11aa5a96ea97d79699af7bc54b5d2b8333847d38da660aaf9e0",
-    "007de12510667a1d56b61720257f07a3905abb3a8b479bdff926bb17d1a9e766",
-    "8f0d10ddf23aafb755e682291d56d38a20bbc17ce1d5081c15067865b6867260",
-    "5585c6bac11925fc762d0a8e6b95b3a3bd66379e74e8711e432fda3f6966bf08",
-    "ea531b1af3da7dc71a7f7a304076e74b526655bc2daf83d9b5d69f1bc4555af0"
-  ]
-}
-```
-
-### wallet.getTransactionHashes(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|addresses|No|Array of public wallet addresses|strings|
-|blockHash|No|Block hash to scan|string|
-|firstBlockIndex|No|The height of the blockchain to start at|integer|
-|blockCount|Yes|How many blocks to return at maximum|integer|
-|paymentId|No|Payment ID to scan for|string|
-
-***Note:*** Only **one** of either ```blockHash``` or ```firstBlockIndex``` may be supplied, but not both.
-
-#### Example Code
-
-```javascript
-wallet.getTransactionHashes({
-  addresses: [
-    "TRTLux9QBmzCYEGgdWXHEQCAm6vY9vZHkbGmx8ev5LxhYk8N71Pp7PWFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJZ25i9n",
-    "TRTLv1mPerM2ckUuNvxrkzDE7QKd9PFVUXYbVfbvx8YxB5BYEdSqQvUFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJbQMVgF"
-  ],
-  blockHash: 'f98d6bbe80a81b3aa0aebd004096e2223524f58f347a1f21be122450f244b948',
-  blockCount: 1
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "items": [
-    {
-      "blockHash": "f98d6bbe80a81b3aa0aebd004096e2223524f58f347a1f21be122450f244b948",
-      "transactionHashes": [
-        "d01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751"
-      ]
-    }
-  ]
-}
-```
-
-### wallet.getTransactions(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|addresses|No|Array of public wallet addresses|strings|
-|blockHash|No|Block hash to scan|string|
-|firstBlockIndex|No|The height of the blockchain to start at|integer|
-|blockCount|Yes|How many blocks to return at maximum|integer|
-|paymentId|No|Payment ID to scan for|string|
-
-***Note:*** Only **one** of either ```blockHash``` or ```firstBlockIndex``` may be supplied, but not both.
-
-#### Example Code
-
-```javascript
-wallet.getTransactions({
-  addresses: [
-    "TRTLux9QBmzCYEGgdWXHEQCAm6vY9vZHkbGmx8ev5LxhYk8N71Pp7PWFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJZ25i9n",
-    "TRTLv1mPerM2ckUuNvxrkzDE7QKd9PFVUXYbVfbvx8YxB5BYEdSqQvUFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJbQMVgF"
-  ],
-  firstBlockIndex: 469419,
-  blockCount: 1
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-[
-  {
-    "blockHash": "f98d6bbe80a81b3aa0aebd004096e2223524f58f347a1f21be122450f244b948",
-    "transactionAmount": 10.5,
-    "blockIndex": 469419,
-    "extra": "014fa15a893c92e040fc97c8bda6d811685a269309b37ad444755099cbed6d8438",
-    "fee": 0.1,
-    "isBase": false,
-    "paymentId": "",
-    "state": 0,
-    "timestamp": 1526876765,
-    "transactionHash": "d01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751",
-    "address": "TRTLv2MXbzaPYVYqtdNwYpKY7azcVjBjsETN188BpKwi2q83NibqJWtFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJYpcE3D",
-    "amount": 10.5,
-    "type": 0,
-    "unlockTime": 0,
-    "inbound": true
-  }
-]
-```
-
-### wallet.getUnconfirmedTransactionHashes(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|addresses|No|Array of public wallet addresses|strings|
-
-#### Example Code
-
-```javascript
-wallet.getUnconfirmedTransactionHashes({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "transactionHashes": [
-    "80185093fj029jv029j3g092jb32904j0b34jb34gb",
-    "j09213fj20vjh02vb2094jb0394jgb039bj03jb34b"
-  ]
-}
-```
-
-### wallet.getTransaction(options)
-
-***Special Note:*** Any and all amounts/fees will already be in HUMAN readable units. DO NOT DIVIDE AMOUNTS AGAIN unless you've specified ```decimalDivisor``` as ```1``` in the options. You have been warned.
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|transactionHash|Yes|The hash of the transaction|string|
-
-#### Example Code
-
-```javascript
-wallet.getTransaction({
-  transactionHash: 'd01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751'
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "transaction": {
-    "amount": 10,
-    "blockIndex": 469419,
-    "extra": "014fa15a893c92e040fc97c8bda6d811685a269309b37ad444755099cbed6d8438",
-    "fee": 0.1,
-    "isBase": false,
-    "paymentId": "",
-    "state": 0,
-    "timestamp": 1526876765,
-    "transactionHash": "d01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751",
-    "transfers": [
-      {
-        "address": "TRTLv2MXbzaPYVYqtdNwYpKY7azcVjBjsETN188BpKwi2q83NibqJWtFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJYpcE3D",
-        "amount": 10,
-        "type": 0
-      },
-      {
-        "address": "",
-        "amount": -20,
-        "type": 0
-      },
-      {
-        "address": "",
-        "amount": 9.9,
-        "type": 0
-      }
-    ],
-    "unlockTime": 0
-  }
-}
-```
-
-### wallet.newTransfer(address, amount)
-
-This method creates a transfer object designed to be used with *wallet.sendTransaction*
-
-***Note: This method does NOT return a promise.***
-
-***Special Note:*** Any and all amounts/fees will already be in HUMAN readable units. DO NOT SUPPLY NATIVE CURRENCY AMOUNTS unless you've specified ```decimalDivisor``` as ```1``` in the options. You have been warned.
-
-#### Example Code
-
-```javascript
-var transfer = wallet.newTransfer('TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ', 1000000)
-```
-
-### wallet.sendTransaction(options)
-
-***Special Note:*** Any and all amounts/fees will already be in HUMAN readable units. DO NOT SUPPLY NATIVE CURRENCY AMOUNTS unless you've specified ```decimalDivisor``` as ```1``` in the options. You have been warned.
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|addresses|No|Array of public wallet addresses|strings|
-|transfers|Yes|Array of transfer objects (see *wallet.newTransfer*) to send funds to|newTransfer|
-|fee|No|Transaction fee for the transaction|float|
-|unlockTime|No|Blockheight ot unlock the transaction at, the UTC timestamp, or ```0``` for now.|integer|
-|mixin|No|The number of mixins to use|integer|
-|extra|No|Extra data to put in the transaction|string|
-|paymentId|No|The payment ID for the transaction|string|
-|changeAddress|No|Where to send any change from the transaction. If not specified, the first address in the wallet container is used.|string|
-
-#### Example Code
-
-```javascript
-wallet.sendTransaction({
-  transfers: [
-    wallet.newTransfer('TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ', 1000000)
-  ],
-  fee: 0.1,
-  mixin: 7,
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "transactionHash": "93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"
-}
-```
-
-### wallet.createDelayedTransaction(options)
-
-***Special Note:*** Any and all amounts/fees will already be in HUMAN readable units. DO NOT SUPPLY NATIVE CURRENCY AMOUNTS unless you've specified ```decimalDivisor``` as ```1``` in the options. You have been warned.
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|addresses|No|Array of public wallet addresses|strings|
-|transfers|Yes|Array of transfer objects (see *wallet.newTransfer*) to send funds to|newTransfer|
-|fee|No|Transaction fee for the transaction|float|
-|unlockTime|No|Blockheight ot unlock the transaction at, the UTC timestamp, or ```0``` for now.|integer|
-|mixin|No|The number of mixins to use|integer|
-|extra|No|Extra data to put in the transaction|string|
-|paymentId|No|The payment ID for the transaction|string|
-|changeAddress|No|Where to send any change from the transaction. If not specified, the first address in the wallet container is used.|string|
-
-#### Example Code
-
-```javascript
-wallet.createDelayedTransaction({
-  transfers: [
-    wallet.newTransfer('TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ', 1000000)
-  ],
-  fee: 0.1,
-  mixin: 7,
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "transactionHash": "93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"
-}
-```
-
-### wallet.getDelayedTransactionHashes()
-
-#### Example Code
-
-```javascript
-wallet.getDelayedTransactionHashes().then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "transactionHashes": [
-    "957dcbf54f327846ea0c7a16b2ae8c24ba3fa8305cc3bbc6424e85e7d358b44b",
-    "25bb751814dd39bf46c972bd760e7516e34200f5e5dd02fda696671e11201f78"
-  ]
-}
-```
-
-### wallet.deleteDelayedTransaction(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|transactionHash|Yes|The hash of the transaction|string|
-
-#### Example Code
-
-```javascript
-wallet.deleteDelayedTransaction({
-  transactionHash: 'd01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751'
-}).then((result) => {
-  // do something
-})
-```
-
-### wallet.sendDelayedTransaction()
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|transactionHash|Yes|The hash of the transaction|string|
-
-#### Example Code
-
-```javascript
-wallet.sendDelayedTransaction({
-  transactionHash: 'd01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751'
-}).then((result) => {
-  // do something
-})
-```
-
-### wallet.sendFusionTransaction(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|threshold|No|The minimum fusion threshold amount|integer|
-|mixin|No|The number of mixins to use|integer|
-|addresses|No|Array of public wallet addresses|strings|
-|destinationAddress|No|The address to send the fusion transaction to|string|
-
-***Note:*** If the container has only one address or ```addressess``` consists of one address, then ```destinationAddress``` need not be supplied. Otherwise, ```destinationAddress``` is required.
-
-#### Example Code
-
-```javascript
-wallet.sendFusionTransaction({
-  mixin: 7,
-  destinationAddress: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "transactionHash": "93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"
-}
-```
-
-### wallet.estimateFusion(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|threshold|No|The minimum fusion threshold amount|integer|
-|addresses|No|Array of public wallet addresses|strings|
-
-#### Example Code
-
-```javascript
-wallet.estimateFusion({
-  threshold: 100000000,
-  addresses:[
-    'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
-  ]
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-{
-  "fusionReadyCount": 0,
-  "totalOutputCount": 19
-}
-```
-
-### wallet.createIntegratedAddress(options)
-
-#### Method Parameters
-
-|Argument|Mandatory|Description|Format|
-|---|---|---|---|
-|address|Yes|The public wallet address|string|
-|paymentId|Yes|The paymentId to incorporate|string|
-
-#### Example Code
-
-```javascript
-wallet.createIntegratedAddress({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ',
-  paymentId: '80ec855eef7df4bce718442cabe086f19dfdd0d03907c7768eddb8eca8c5a667'
-}).then((result) => {
-  // do something
-})
-```
-
-#### Example Data
-
-```javascript
-TRTLTyPSXMZB5j2wbztMzRXu2rVCuNVLUb4WKARRZY9ficYWshMDy7p4MXEz24mkyb4KFDVksDj41XTJ4DC3c7P2SfRg3r5q1ve9x7x5tK
-
-```
-
-## Client RPC API Interface
-
-We expose all of the Plenteumd Client RPC API commands via the ```Client``` interface. Each of the below methods are [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises). For safety sake, **always** handle your promise catches as we do use them properly.
-
-Methods noted having options have parameters that may be *optional* or *required* as documented.
-
-### client.getBlocks(options)
+### daemon.getBlocks(options)
 
 *Not implemented*
 
-### client.queryBlocks(options)
+### daemon.queryBlocks(options)
 
 *Not implemented*
 
-### client.queryBlocksLite(options)
+### daemon.queryBlocksLite(options)
 
-Retrieves the last 100 (as defined in ) blocks from the first block hash supplied in the requested array.
+Retrieves the last 100 blocks from the last block hash that the daemon knows about in the list provided
+
+For the best results, the block hashes you supply should follow the following order:
+
+The first 10 blocks are sequential descending, next goes in pow(2,n), like 2, 4, 8, 16, 32, 64 and so on, and the last one is always genesis block
 
 #### Method Parameters
 
@@ -1463,7 +806,7 @@ Retrieves the last 100 (as defined in ) blocks from the first block hash supplie
 #### Example Code
 
 ```javascript
-client.queryBlocksLite({
+daemon.queryBlocksLite({
   blockHashes: [
     '5b926d9fac41fbc53bf7c5ffc7e45e345f8c26aaefec9d3f9b019097a8827c12',
     '08aaf1b5cf2d7b62e12bd9182051225ccb1dabea9ee6847d969dbf60b08619af'
@@ -1484,7 +827,7 @@ client.queryBlocksLite({
     "items": [
         {
             "blockShortInfo.block": [
-                4, 
+                4,
                 0,
                 123,
                 173,
@@ -1580,7 +923,117 @@ client.queryBlocksLite({
 }
 ```
 
-### client.getIndexes(options)
+### daemon.queryBlocksDetailed(options)
+
+Retrieves the last 100 blocks from the last block hash that the daemon knows about in the list provided
+
+For the best results, the block hashes you supply should follow the following order:
+
+The first 10 blocks are sequential descending, next goes in pow(2,n), like 2, 4, 8, 16, 32, 64 and so on, and the last one is always genesis block
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|blockHashes|Yes|The block hashes to query|strings|
+|timestamp|No|The timestamp to query|integer|
+|blockCount|No|The number of blocks to return (2 <= count <= 100)|integer|
+
+#### Example Code
+
+```javascript
+daemon.queryBlocksDetailed({
+  blockHashes: [
+    '7fb97df81221dd1366051b2d0bcdf49c66c22ac4431d879c895b06d66ef66f4c',
+    '7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c'
+  ]
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+***Note:*** Example data has been heavily truncated for display below.
+
+```javascript
+{
+  "blocks": [
+    {
+      "alreadyGeneratedCoins": 2980232,
+      "alreadyGeneratedTransactions": 1,
+      "baseReward": 2980232,
+      "blockSize": 117,
+      "difficulty": 1,
+      "hash": "7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c",
+      "index": 0,
+      "majorVersion": 1,
+      "minorVersion": 0,
+      "nonce": 70,
+      "prevBlockHash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "reward": 2980232,
+      "sizeMedian": 0,
+      "timestamp": 0,
+      "totalFeeAmount": 0,
+      "transactions": [
+        {
+          "blockHash": "7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c",
+          "blockIndex": 0,
+          "extra": {
+            "nonce": [],
+            "publicKey": "42694232c5b04151d9e4c27d31ec7a68ea568b19488cfcb422659a07a0e44dd5",
+            "raw": ""
+          },
+          "fee": 0,
+          "hash": "0d1c0f28b5f5eaa6a21c110eed1339ac9a9eb6a1689d8c31c51a011983069e9b",
+          "inBlockchain": true,
+          "inputs": [
+            {
+              "data": {
+                "amount": 2980232,
+                "input": {
+                  "height": 0
+                }
+              },
+              "type": "ff"
+            }
+          ],
+          "mixin": 0,
+          "outputs": [
+            {
+              "globalIndex": 0,
+              "output": {
+                "amount": 2980232,
+                "target": {
+                  "data": {
+                    "key": "9b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd088071"
+                  },
+                  "type": "02"
+                }
+              }
+            }
+          ],
+          "paymentId": "0000000000000000000000000000000000000000000000000000000000000000",
+          "signatures": [],
+          "signaturesSize": 0,
+          "size": 77,
+          "timestamp": 0,
+          "totalInputsAmount": 0,
+          "totalOutputsAmount": 2980232,
+          "unlockTime": 10
+        }
+      ],
+      "transactionsCumulativeSize": 77
+    }
+  ],
+  "currentHeight": 968709,
+  "fullOffset": 0,
+  "startHeight": 0,
+  "status": "OK"
+}
+```
+
+### daemon.getIndexes(options)
 
 Returns the output indexes of the transaction
 
@@ -1593,7 +1046,7 @@ Returns the output indexes of the transaction
 #### Example Code
 
 ```javascript
-client.getIndexes({
+daemon.getIndexes({
   transactionHash: "749099c72571142234f0c8a5b394621576fac72b82507daa386a69519e210d9b"
 }).then((result) => {
   // do something
@@ -1620,7 +1073,7 @@ client.getIndexes({
 }
 ```
 
-### client.getRandomOutputs(options)
+### daemon.getRandomOutputs(options)
 
 #### Method Parameters
 
@@ -1632,7 +1085,7 @@ client.getIndexes({
 #### Example Code
 
 ```javascript
-client.getRandomOutputs({
+daemon.getRandomOutputs({
   amounts: [
     100,
     1000
@@ -1687,7 +1140,7 @@ client.getRandomOutputs({
 }
 ```
 
-### client.getPoolChanges(options)
+### daemon.getPoolChanges(options)
 
 Returns updates regarding the transaction mempool.
 
@@ -1701,7 +1154,7 @@ Returns updates regarding the transaction mempool.
 #### Example Code
 
 ```javascript
-client.getPoolChanges({
+daemon.getPoolChanges({
   tailBlockHash: "410a8e6166a4582d592143c2a9bb062f6601712a7b7a99c0de71eebeb01d6521",
   knownTransactionHashes: []
 }).then((result) => {
@@ -1787,7 +1240,7 @@ client.getPoolChanges({
 }
 ```
 
-### client.getPoolChangesLite(options)
+### daemon.getPoolChangesLite(options)
 
 Returns updates regarding the transaction mempool.
 
@@ -1801,7 +1254,7 @@ Returns updates regarding the transaction mempool.
 #### Example Code
 
 ```javascript
-client.getPoolChangesLite({
+daemon.getPoolChangesLite({
   tailBlockHash: "410a8e6166a4582d592143c2a9bb062f6601712a7b7a99c0de71eebeb01d6521",
   knownTransactionHashes: []
 }).then((result) => {
@@ -1887,7 +1340,7 @@ client.getPoolChangesLite({
 }
 ```
 
-### client.getBlockDetailsByHeight(options)
+### daemon.getBlockDetailsByHeight(options)
 
 #### Method Parameters
 
@@ -1898,7 +1351,7 @@ client.getPoolChangesLite({
 #### Example Code
 
 ```javascript
-client.getBlockDetailsByHeight({
+daemon.getBlockDetailsByHeight({
   blockHeight: 600000
 }).then((result => {
   // do something
@@ -2060,7 +1513,7 @@ client.getBlockDetailsByHeight({
 }
 ```
 
-### client.getBlocksDetailsByHeights(options)
+### daemon.getBlocksDetailsByHeights(options)
 
 ### Method Parameters
 
@@ -2071,7 +1524,7 @@ client.getBlockDetailsByHeight({
 #### Example Code
 
 ```javascript
-client.getBlocksDetailsByHeights({
+daemon.getBlocksDetailsByHeights({
   blockHeights: [
     500000,
     600000
@@ -2377,7 +1830,7 @@ client.getBlocksDetailsByHeights({
 
 #### Example Data
 
-### client.getBlocksDetailsByHashes(options)
+### daemon.getBlocksDetailsByHashes(options)
 
 #### Method Parameters
 
@@ -2388,7 +1841,7 @@ client.getBlocksDetailsByHeights({
 #### Example Code
 
 ```javascript
-client.getBlocksDetailsByHashes({
+daemon.getBlocksDetailsByHashes({
   blockHashes: [
     '4c4ce202a918f52a5f777be3de160bbe579f8cd7bd1e8a097b5f46bac900d471',
     'eb84504720dba262bc02d79d922f9f183eb394586874e27c3fc6f4d0c76e31ed'
@@ -2692,7 +2145,7 @@ client.getBlocksDetailsByHashes({
 }
 ```
 
-### client.getBlocksHashesByTimestamps(options)
+### daemon.getBlocksHashesByTimestamps(options)
 
 #### Method Parameters
 
@@ -2704,7 +2157,7 @@ client.getBlocksDetailsByHashes({
 #### Example Code
 
 ```javascript
-client.getBlocksHashesByTimestamps({
+daemon.getBlocksHashesByTimestamps({
   timestampBegin: 1531348100,
   seconds: 240
 }).catch((result) => {
@@ -2724,7 +2177,7 @@ client.getBlocksHashesByTimestamps({
 }
 ```
 
-### client.getTransactionDetailsByHashes(options)
+### daemon.getTransactionDetailsByHashes(options)
 
 #### Method Parameters
 
@@ -2735,7 +2188,7 @@ client.getBlocksHashesByTimestamps({
 #### Example Code
 
 ```javascript
-client.getTransactionDetailsByHashes({
+daemon.getTransactionDetailsByHashes({
   transactionHashes: [
     "8620c2f19b00182beb407023848305889baaa5202f3664c9efa70a843bf26c7b",
     "687c487be84153ead8e70e3873d30f334316fc7d9ed052dd0575faad57d135dd"
@@ -2895,7 +2348,7 @@ client.getTransactionDetailsByHashes({
 }
 ```
 
-### client.getTransactionHashesByPaymentId(options)
+### daemon.getTransactionHashesByPaymentId(options)
 
 #### Method Parameters
 
@@ -2906,7 +2359,7 @@ client.getTransactionDetailsByHashes({
 #### Example Code
 
 ```javascript
-client.getTransactionHashesByPaymentId({
+daemon.getTransactionHashesByPaymentId({
   paymentId: "80ec855eef7df4bce718442cabe086f19dfdd0d03907c7768eddb8eca8c5a667"
 }).catch((result) => {
   // do something
@@ -2936,11 +2389,934 @@ client.getTransactionHashesByPaymentId({
 }
 ```
 
+### daemon.getWalletSyncData(options)
+
+Returns up to 100 blocks. If block hash checkpoints are given, it will return
+beginning from the height of the first hash it finds, plus one.
+
+However, if startHeight or startTimestamp is given, and this value is higher
+than the block hash checkpoints, it will start returning from that height instead.
+
+The block hash checkpoints should be given with the highest block height hashes
+first.
+
+Typical usage: specify a start height/timestamp initially, and from then on,
+also provide the returned block hashes.
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|startHeight|No|The height to begin returning blocks from|integer|
+|startTimestamp|No|The timestamp to begin returning blocks from (unix style)|integer|
+|blockHashCheckpoints|No|The timestamp to begin returning blocks from|strings|
+
+#### Example Code
+
+```javascript
+daemon.getWalletSyncData({
+  startHeight: 1000,
+  blockHashCheckpoints: [
+    "0606a15147159e3f01dd90aa78828cf8587caed36203cd764701b56eb6ff6fd8",
+    "1d61bf052ee2fa3720078ee01cf30e01ba305096bf3e3d3668fbc09bbeafa244"
+  ]
+}).then((blocks) => {
+  // do something
+}).catch((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+***Note:*** Example data has been heavily truncated for display below.
+
+```javascript
+[
+    {
+      "blockHash": "221e7c19b11473c78694369945ef2b46d327255a3cf27e827c1da5a9971a4cbc",
+      "blockHeight": 1106498,
+      "blockTimestamp": 1546214436,
+      "coinbaseTX": {
+        "hash": "6c2a9be4897d6b60b8c093bc3c7e24624910ae162f9b8d2b8c1f1b8156219e85",
+        "outputs": [
+          {
+            "amount": 6,
+            "key": "d8d4d10e6d663b4bdad910b93141f6b289be6c091097bcb9f140c37d3f5df95e"
+          },
+          {
+            "amount": 20,
+            "key": "bb6032cb23b0c6c936897071b4a414381fd0c4c22f1353a4e09ef9e5e6ded4b0"
+          },
+          {
+            "amount": 800,
+            "key": "cc31e9d568a2013e600d3da523c4d7edc51e4d166a8ce4667bed75353ceed323"
+          },
+          {
+            "amount": 3000,
+            "key": "5c847e85a006b914ae170e30e9f7899fd0187e10e0428e6636f024766fabc401"
+          },
+          {
+            "amount": 80000,
+            "key": "6f784909cfacdbe89948df275710f214def9873b19ae9b6c1ea45cb5b29df9df"
+          },
+          {
+            "amount": 800000,
+            "key": "a8c1f615f51a1caae91d50e4a5ba0fb71ae2d02a66e684ec3636df091da82b66"
+          },
+          {
+            "amount": 2000000,
+            "key": "d49965a46be6e5b95401c119a8a884bd259e66d3a0ec68ba8ee759eb6c7c26bf"
+          }
+        ],
+        "txPublicKey": "8770d63f4211bfe8f50c2344ee000e99c4023a9de382c36bfaa20846f71e8958",
+        "unlockTime": 1106538
+      },
+      "transactions": [
+        {
+          "hash": "f6316d35ab64080165c6c0476e9382306de3a5ff3367b32ac36acd0e0d374f40",
+          "inputs": [
+            {
+              "amount": 2000000,
+              "k_image": "52e6c9c96664693178f2f2cafef5200aa2e6ae2e1dd413c606dd7ce1bec77f2d",
+              "key_offsets": [
+                1259742,
+                6216,
+                1,
+                1
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "amount": 4000000,
+              "key": "309bca3a13c4b2e4eb592b9751619945e5d49e74993fbdca9c74e403a03b52d6"
+            }
+          ],
+          "paymentID": "",
+          "txPublicKey": "01213035e9be3db80afa81e5d0d0305ffaad00513f0f3f38deff67d6bc9c3a6b",
+          "unlockTime": 0
+        },
+      ]
+    }
+]
+```
+
+### daemon.getGlobalIndexesForRange(options)
+
+Returns the global indexes for any transactions in the range [startHeight .. endHeight].
+Generally, you only want the global index for a specific transaction, however,
+this reveals that you probably are the recipient of this transaction. By
+supplying a range of blocks, you can obfusticate which transaction you are
+enquiring about.
+
+Note: key = transaction hash, value = global indexes for the outputs in that hash.
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|startHeight|No|The height to begin returning indices from|integer|
+|endHeight|No|The height to end returning indices from |integer|
+
+#### Example Code
+
+```javascript
+daemon.getGlobalIndexesForRange({
+    startHeight: 12345,
+    endHeight: 12347
+}).then((indexes) => {
+  // do something
+}).catch((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+[
+    {
+      "key": "e4331d0453affa0a61c441dd422f9159cbb4a82006051ef23dbfbd61cefa0256",
+      "value": [
+        1271,
+        1244,
+        1866,
+        9858,
+        9824,
+        12428,
+        12418
+      ]
+    },
+    {
+      "key": "0e8d74b89d79f30bb33d74037259a34a6d86f13aa2c6d2c7716e2831aa1a82a9",
+      "value": [
+        1272,
+        1245,
+        1867,
+        9859,
+        9825,
+        12429,
+        12419
+      ]
+    }
+]
+```
+
+### daemon.getTransactionsStatus(options)
+
+Returns the status of the transaction hashes given to the daemon.
+
+transactionsInPool = Transactions that are in the daemons mempool, but not in a
+block yet.
+
+transactionsInBlock = Transactions that have been included into a block.
+
+transactionsUnknown = Transactions the daemon doesn't know anything about.
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|transactionHashes|Yes|The transaction hashes to query|strings|
+
+#### Example Code
+
+```javascript
+daemon.getTransactionsStatus({
+  transactionHashes: [
+    '549828e75151982b0e51b27e8f53b26ebc174f0ef78063984c8952b13e2a3564',
+    '549828e75151982b0e51b27e8f53b26ebc174f0ef78063984c8952b13e2a3563'
+  ]
+}).then((txStatus) => {
+  // do something
+}).catch((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "transactionsInBlock": [
+    "549828e75151982b0e51b27e8f53b26ebc174f0ef78063984c8952b13e2a3564"
+  ],
+  "transactionsInPool": [],
+  "transactionsUnknown": [
+    "549828e75151982b0e51b27e8f53b26ebc174f0ef78063984c8952b13e2a3563"
+  ]
+}
+```
+
+## WalletService RPC API Interface
+
+We expose all of the `wallet-service` RPC API commands via the ```WalletService``` interface. Each of the below methods are [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises). For safety sake, **always** handle your promise catches as we do use them properly.
+
+***Special Note:*** Any and all amounts/fees will already be in HUMAN readable units. DO NOT DIVIDE THEM AGAIN unless you've specified ```decimalDivisor``` as ```1``` in the options. You have been warned.
+
+Unless otherwise noted, all methods will resolve the promise upon success and sample return data is supplied below. Any errors will reject the promise with an error condition.
+
+Methods noted having options have parameters that may be *optional* or *required* as documented.
+
+### service.reset(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|scanHeight|No|The scanHeight to start scanning for transactions|integer|
+
+#### Example Code
+
+```javascript
+service.reset({
+  scanHeight: 100000
+}).then(() => {
+  // do something
+})
+```
+
+### service.save()
+
+#### Example Code
+
+```javascript
+service.save().then(() => {
+  // do something
+})
+```
+
+### service.getNodeFeeInfo()
+
+This method returns the Node fee information that the service picks up via the connected daemon.
+
+#### Example Code
+
+```javascript
+service.getNodeFeeInfo().then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "address": "PLeav6cZtPXCSGABomtjm1Y74NfyhJzh2QqAvyeYjgpLYNHJrSCLfJ6c1f74BhbN695UeCQUeQoxRPa6VaaoCJHQ4L4tbguGLz",
+  "amount": 5000
+}
+```
+
+### service.getViewKey()
+
+#### Example Code
+
+```javascript
+service.getViewKey().then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "viewSecretKey": "12345678901234567890"
+}
+```
+
+### service.getSpendKeys(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|address|Yes|Public wallet address|string|
+
+#### Example Code
+
+```javascript
+service.getSpendKeys({
+  address: 'PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5'
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "spendPublicKey": "9e50b808f1e2522b7c6feddd8e2f6cdcd89ff33b623412de2061d78c84588eff33b6d9",
+  "spendSecretKey": "c6639a75a37f63f92e2f096fa262155c943b4fdc243ffb02b8178ab960bb5d0f"
+}
+```
+
+### service.getMnemonicSeed(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|address|Yes|Public wallet address|string|
+
+#### Example Code
+
+```javascript
+service.getMnemonicSeed({
+  address: 'PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5'
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```text
+river nudged peculiar ailments waking null tossed anchor erase jive eavesdrop veered truth wield stacking tattoo unplugs oven wipeout aptitude estate dazed observant oxygen oxygen
+```
+
+### service.getStatus()
+
+#### Example Code
+
+```javascript
+service.getStatus().then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "blockCount": 491214,
+  "knownBlockCount": 491215,
+  "lastBlockHash": "fc33b0fcdb8a3ed8e2de3cb36df325d67e9926d59f02d164baacf3ddefe8df12",
+  "peerCount": 8
+}
+```
+
+### service.getAddresses()
+
+#### Example Code
+
+```javascript
+service.getAddresses().then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+[
+  "PLeaqxXuJiJAxnpFJkezWfaWz5fQDmpZjLqAy5CeDdhtNCspaCuNDWdUubuAVUC7QbKg9nVwnmERf1ifj68phs8y32HYepnTLC",
+  "PLeaayAw34b2vkmhwordkNKcEFGnpRRUcgEXTuNC6TzcVsHXLjXy7q9ZbGACfjYRZHSnVCN5852eVNgQK77XXGmv4FGHdS5Yr8"
+]
+```
+
+### service.createAddress(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|secretSpendKey|No|Address secret spend key|string|
+|publicSpendKey|No|Address public spend key|string|
+
+**Note:** Both ```secretSpendKey``` and ```publicSpendKey``` are optional; however, you can only supply one or the other. Both are given below as **examples**.
+
+#### Example Code
+
+```javascript
+service.createAddress({
+  secretSpendKey: 'c6639a75a37f63f92e2f096fa262155c943b4fdc243ffb02b8178ab960bb5d0f',
+  publicSpendKey: '9e50b808f1e2522b7c6feddd8e2f6cdcd89ff33b623412de2061d78c84588eff33b6d9'
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "address": "PLeaqoqP4q3j7ThHEU7ARyByM4sPgZjXZZwrw7mzGuVPbAhUvDtmHmQNxVpDLW7bBM6eNJfJWwEiyJQru3bT6UAT4mpB7ZTP66"
+}
+```
+
+### service.deleteAddress(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|address|No|Public wallet address|string|
+
+#### Example Code
+
+```javascript
+service.deleteAddress({
+  address: 'PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5'
+}).then((result) => {
+  // do something
+})
+```
+
+### service.getBalance(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|address|No|Public wallet address|string|
+
+#### Example Code
+
+```javascript
+service.getBalance({
+  address: 'PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5'
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "availableBalance": 60021.54,
+  "lockedAmount": 0
+}
+```
+
+### service.getBlockHashes(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|firstBlockIndex|Yes|The height of the blockchain to start at|integer|
+|blockCount|Yes|How many blocks to return at maximum|integer|
+
+#### Example Code
+
+```javascript
+service.getBlockHashes({
+  firstBlockIndex: 500000,
+  blockCount: 10
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "blockHashes": [
+    "8c9738f961a278486f27ce214d1e4d67e08f7400c8b38fe00cdd571a8d302c7d",
+    "2ef060801dd27327533580cfa538849f9e1968d13418f2dd2535774a8c494bf4",
+    "3ac40c464986437dafe9057f73780e1a3a6cd2f90e0c5fa69c5caab80556a68a",
+    "ac821fcb9e9c903abe494bbd2c8f3333602ebdb2f0a98519fc84899906a7f52b",
+    "4dcffeea7aec064ec5c03e1cb6cf58265a2b76c4f2db9e5fc4afbaf967b77bba",
+    "1b82b0df589cb11aa5a96ea97d79699af7bc54b5d2b8333847d38da660aaf9e0",
+    "007de12510667a1d56b61720257f07a3905abb3a8b479bdff926bb17d1a9e766",
+    "8f0d10ddf23aafb755e682291d56d38a20bbc17ce1d5081c15067865b6867260",
+    "5585c6bac11925fc762d0a8e6b95b3a3bd66379e74e8711e432fda3f6966bf08",
+    "ea531b1af3da7dc71a7f7a304076e74b526655bc2daf83d9b5d69f1bc4555af0"
+  ]
+}
+```
+
+### service.getTransactionHashes(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|addresses|No|Array of public wallet addresses|strings|
+|blockHash|No|Block hash to scan|string|
+|firstBlockIndex|No|The height of the blockchain to start at|integer|
+|blockCount|Yes|How many blocks to return at maximum|integer|
+|paymentId|No|Payment ID to scan for|string|
+
+***Note:*** Only **one** of either ```blockHash``` or ```firstBlockIndex``` may be supplied, but not both.
+
+#### Example Code
+
+```javascript
+service.getTransactionHashes({
+  addresses: [
+    "PLeaqxXuJiJAxnpFJkezWfaWz5fQDmpZjLqAy5CeDdhtNCspaCuNDWdUubuAVUC7QbKg9nVwnmERf1ifj68phs8y32HYepnTLC",
+    "PLeaayAw34b2vkmhwordkNKcEFGnpRRUcgEXTuNC6TzcVsHXLjXy7q9ZbGACfjYRZHSnVCN5852eVNgQK77XXGmv4FGHdS5Yr8"
+  ],
+  blockHash: 'f98d6bbe80a81b3aa0aebd004096e2223524f58f347a1f21be122450f244b948',
+  blockCount: 1
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "items": [
+    {
+      "blockHash": "f98d6bbe80a81b3aa0aebd004096e2223524f58f347a1f21be122450f244b948",
+      "transactionHashes": [
+        "d01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751"
+      ]
+    }
+  ]
+}
+```
+
+### service.getTransactions(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|addresses|No|Array of public wallet addresses|strings|
+|blockHash|No|Block hash to scan|string|
+|firstBlockIndex|No|The height of the blockchain to start at|integer|
+|blockCount|Yes|How many blocks to return at maximum|integer|
+|paymentId|No|Payment ID to scan for|string|
+
+***Note:*** Only **one** of either ```blockHash``` or ```firstBlockIndex``` may be supplied, but not both.
+
+#### Example Code
+
+```javascript
+service.getTransactions({
+  addresses: [
+    "PLeaqxXuJiJAxnpFJkezWfaWz5fQDmpZjLqAy5CeDdhtNCspaCuNDWdUubuAVUC7QbKg9nVwnmERf1ifj68phs8y32HYepnTLC",
+    "PLeaayAw34b2vkmhwordkNKcEFGnpRRUcgEXTuNC6TzcVsHXLjXy7q9ZbGACfjYRZHSnVCN5852eVNgQK77XXGmv4FGHdS5Yr8"
+  ],
+  firstBlockIndex: 469419,
+  blockCount: 1
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+[
+  {
+    "blockHash": "f98d6bbe80a81b3aa0aebd004096e2223524f58f347a1f21be122450f244b948",
+    "transactionAmount": 10.5,
+    "blockIndex": 469419,
+    "extra": "014fa15a893c92e040fc97c8bda6d811685a269309b37ad444755099cbed6d8438",
+    "fee": 0.1,
+    "isBase": false,
+    "paymentId": "",
+    "state": 0,
+    "timestamp": 1526876765,
+    "transactionHash": "d01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751",
+    "address": "PLeayqg8yxa72yYmsphaj3Z5jatCUZNjK9Jn5PBvRrmo2Kv7vKvAQmw5z5fgkQuBtnLeWvGyU5oVEjkcWe1oQJkN5RG8w9PxiV",
+    "amount": 10.5,
+    "type": 0,
+    "unlockTime": 0,
+    "inbound": true
+  }
+]
+```
+
+### service.getUnconfirmedTransactionHashes(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|addresses|No|Array of public wallet addresses|strings|
+
+#### Example Code
+
+```javascript
+service.getUnconfirmedTransactionHashes({
+  address: 'PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5'
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "transactionHashes": [
+    "80185093fj029jv029j3g092jb32904j0b34jb34gb",
+    "j09213fj20vjh02vb2094jb0394jgb039bj03jb34b"
+  ]
+}
+```
+
+### service.getTransaction(options)
+
+***Special Note:*** Any and all amounts/fees will already be in HUMAN readable units. DO NOT DIVIDE AMOUNTS AGAIN unless you've specified ```decimalDivisor``` as ```1``` in the options. You have been warned.
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|transactionHash|Yes|The hash of the transaction|string|
+
+#### Example Code
+
+```javascript
+service.getTransaction({
+  transactionHash: 'd01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751'
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "transaction": {
+    "amount": 10,
+    "blockIndex": 469419,
+    "extra": "014fa15a893c92e040fc97c8bda6d811685a269309b37ad444755099cbed6d8438",
+    "fee": 0.1,
+    "isBase": false,
+    "paymentId": "",
+    "state": 0,
+    "timestamp": 1526876765,
+    "transactionHash": "d01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751",
+    "transfers": [
+      {
+        "address": "PLeayqg8yxa72yYmsphaj3Z5jatCUZNjK9Jn5PBvRrmo2Kv7vKvAQmw5z5fgkQuBtnLeWvGyU5oVEjkcWe1oQJkN5RG8w9PxiV",
+        "amount": 10,
+        "type": 0
+      },
+      {
+        "address": "",
+        "amount": -20,
+        "type": 0
+      },
+      {
+        "address": "",
+        "amount": 9.9,
+        "type": 0
+      }
+    ],
+    "unlockTime": 0
+  }
+}
+```
+
+### service.newTransfer(address, amount)
+
+This method creates a transfer object designed to be used with *service.sendTransaction*
+
+***Note: This method does NOT return a promise.***
+
+***Special Note:*** Any and all amounts/fees will already be in HUMAN readable units. DO NOT SUPPLY NATIVE CURRENCY AMOUNTS unless you've specified ```decimalDivisor``` as ```1``` in the options. You have been warned.
+
+#### Example Code
+
+```javascript
+var transfer = service.newTransfer('PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5', 1000000)
+```
+
+### service.sendTransaction(options)
+
+***Special Note:*** Any and all amounts/fees will already be in HUMAN readable units. DO NOT SUPPLY NATIVE CURRENCY AMOUNTS unless you've specified ```decimalDivisor``` as ```1``` in the options. You have been warned.
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|addresses|No|Array of public wallet addresses|strings|
+|transfers|Yes|Array of transfer objects (see *service.newTransfer*) to send funds to|newTransfer|
+|fee|No|Transaction fee for the transaction|float|
+|unlockTime|No|Blockheight ot unlock the transaction at, the UTC timestamp, or ```0``` for now.|integer|
+|mixin|No|The number of mixins to use|integer|
+|extra|No|Extra data to put in the transaction|string|
+|paymentId|No|The payment ID for the transaction|string|
+|changeAddress|No|Where to send any change from the transaction. If not specified, the first address in the wallet container is used.|string|
+
+#### Example Code
+
+```javascript
+service.sendTransaction({
+  transfers: [
+    service.newTransfer('PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5', 1000000)
+  ],
+  fee: 0.1,
+  mixin: 7,
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "transactionHash": "93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"
+}
+```
+
+### service.createDelayedTransaction(options)
+
+***Special Note:*** Any and all amounts/fees will already be in HUMAN readable units. DO NOT SUPPLY NATIVE CURRENCY AMOUNTS unless you've specified ```decimalDivisor``` as ```1``` in the options. You have been warned.
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|addresses|No|Array of public wallet addresses|strings|
+|transfers|Yes|Array of transfer objects (see *service.newTransfer*) to send funds to|newTransfer|
+|fee|No|Transaction fee for the transaction|float|
+|unlockTime|No|Blockheight ot unlock the transaction at, the UTC timestamp, or ```0``` for now.|integer|
+|mixin|No|The number of mixins to use|integer|
+|extra|No|Extra data to put in the transaction|string|
+|paymentId|No|The payment ID for the transaction|string|
+|changeAddress|No|Where to send any change from the transaction. If not specified, the first address in the wallet container is used.|string|
+
+#### Example Code
+
+```javascript
+service.createDelayedTransaction({
+  transfers: [
+    service.newTransfer('PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5', 1000000)
+  ],
+  fee: 0.1,
+  mixin: 7,
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "transactionHash": "93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"
+}
+```
+
+### service.getDelayedTransactionHashes()
+
+#### Example Code
+
+```javascript
+service.getDelayedTransactionHashes().then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "transactionHashes": [
+    "957dcbf54f327846ea0c7a16b2ae8c24ba3fa8305cc3bbc6424e85e7d358b44b",
+    "25bb751814dd39bf46c972bd760e7516e34200f5e5dd02fda696671e11201f78"
+  ]
+}
+```
+
+### service.deleteDelayedTransaction(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|transactionHash|Yes|The hash of the transaction|string|
+
+#### Example Code
+
+```javascript
+service.deleteDelayedTransaction({
+  transactionHash: 'd01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751'
+}).then((result) => {
+  // do something
+})
+```
+
+### service.sendDelayedTransaction()
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|transactionHash|Yes|The hash of the transaction|string|
+
+#### Example Code
+
+```javascript
+service.sendDelayedTransaction({
+  transactionHash: 'd01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751'
+}).then((result) => {
+  // do something
+})
+```
+
+### service.sendFusionTransaction(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|threshold|No|The minimum fusion threshold amount|integer|
+|mixin|No|The number of mixins to use|integer|
+|addresses|No|Array of public wallet addresses|strings|
+|destinationAddress|No|The address to send the fusion transaction to|string|
+
+***Note:*** If the container has only one address or ```addressess``` consists of one address, then ```destinationAddress``` need not be supplied. Otherwise, ```destinationAddress``` is required.
+
+#### Example Code
+
+```javascript
+service.sendFusionTransaction({
+  mixin: 7,
+  destinationAddress: 'PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5'
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "transactionHash": "93faedc8b8a80a084a02dfeffd163934746c2163f23a1b6022b32423ec9ae08f"
+}
+```
+
+### service.estimateFusion(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|threshold|No|The minimum fusion threshold amount|integer|
+|addresses|No|Array of public wallet addresses|strings|
+
+#### Example Code
+
+```javascript
+service.estimateFusion({
+  threshold: 100000000,
+  addresses:[
+    'PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5'
+  ]
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+{
+  "fusionReadyCount": 0,
+  "totalOutputCount": 19
+}
+```
+
+### service.createIntegratedAddress(options)
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|address|Yes|The public wallet address|string|
+|paymentId|Yes|The paymentId to incorporate|string|
+
+#### Example Code
+
+```javascript
+service.createIntegratedAddress({
+  address: 'PLeatG4uDSoKEbg1NJVaoGT1TWxDfcNXKbKJ93yim4SNihCVFoGjfZU7fsKEwJZnZD89hknerAUWXePAVUQrDDPV1yu7axwJx5',
+  paymentId: '80ec855eef7df4bce718442cabe086f19dfdd0d03907c7768eddb8eca8c5a667'
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+PLeb5QWRWgH31griE2UonF5xpQCyyi3u3L3uC4TSnTxyThnpVDzJo8se7SBC7PZ7Dk5xFTCwC9Pz1Xz7ZLzPrE1T7aJBRQYT6S
+
+```
+
 ## License
 
 ```
 Copyright (C) 2018 Brandon Lehmann, The TurtleCoin Developers
-Copyright (C) 2018 The Plenteum Developers
+Copyright (C) 2018-2019 The Plenteum Developers
 
 Please see the included LICENSE file for more information.
 ```

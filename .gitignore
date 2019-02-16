@@ -166,3 +166,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 test.js
+
+#Visual Studio
+.vs
