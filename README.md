@@ -1,7 +1,7 @@
 [![NPM](https://nodei.co/npm/plenteum-rpc.png?downloads=true&stars=true)](https://nodei.co/npm/plenteum-rpc/)
 
-[![Build Status](https://travis-ci.com/plenteum/plenteum-rpc.png?branch=master)](https://travis-ci.org/plenteum/plenteum-rpc) 
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/davehlong/plenteum-rpc?branch=master&svg=true)](https://ci.appveyor.com/project/davehlong/plenteum-rpc/branch/master)
+[![Build Status](https://travis-ci.com/plenteum/plenteum-rpc.png?branch=master)](https://travis-ci.com/plenteum/plenteum-rpc-js) 
+[![Build status](https://ci.appveyor.com/api/projects/status/ladargwwk6e0m6mi?svg=true)](https://ci.appveyor.com/project/davehlong/plenteum-rpc-js)
 
 # Plenteum RPC API
 
