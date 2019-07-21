@@ -2727,7 +2727,7 @@ Imports a view key for a view-only wallet and saves it to disk.
 #### Example Code
 
 ```js
-wallet.importViewOnly('mywallet', 'mypassword', 'af12383104e1e6a52bc775b9b6cc1e2a00aa2081b2accfb3743b3b81293c0f04', 'TRTLuzXbDdWRsWuL7APprYZEeHW3G4XXuTbzWYtqPoWaSwNkMoYqYRCdtozikcQe3xGGM2PVJg169bE7jzF9dkPGhf9BbMfBZyH', 500000);
+wallet.importViewOnly('mywallet', 'mypassword', 'af12383104e1e6a52bc775b9b6cc1e2a00aa2081b2accfb3743b3b81293c0f04', 'PLeuzXbDdWRsWuL7APprYZEeHW3G4XXuTbzWYtqPoWaSwNkMoYqYRCdtozikcQe3xGGM2PVJg169bE7jzF9dkPGhf9BbMfBZyH', 500000);
 ```
 
 ### wallet.create(filename, password, host, port, ssl)
@@ -2784,7 +2784,7 @@ Deletes the given subwallet from the container
 #### Example Code
 
 ```js
-wallet.deleteAddress('TRTLuzXbDdWRsWuL7APprYZEeHW3G4XXuTbzWYtqPoWaSwNkMoYqYRCdtozikcQe3xGGM2PVJg169bE7jzF9dkPGhf9BbMfBZyH');
+wallet.deleteAddress('PLeuzXbDdWRsWuL7APprYZEeHW3G4XXuTbzWYtqPoWaSwNkMoYqYRCdtozikcQe3xGGM2PVJg169bE7jzF9dkPGhf9BbMfBZyH');
 ```
 
 ### wallet.primaryAddress()
@@ -2855,7 +2855,7 @@ Creates an integrated address from an address and payment ID.
 #### Example Code
 
 ```js
-wallet.createIntegratedAddress('TRTLv1EGFinJDHKbxFT8zDT59fVF8duLqFrGfQMbyPqgEh9fLfXZcEsLosHQ38gaJfA2een645nbJKUgoFpbouKsXu7NDhxxrH1', '86C3924C5B3DF2BD8D1E3F5D3A3229ABA47472BCF0A332C00F05A33D63D9C60E');
+wallet.createIntegratedAddress('PLev1EGFinJDHKbxFT8zDT59fVF8duLqFrGfQMbyPqgEh9fLfXZcEsLosHQ38gaJfA2een645nbJKUgoFpbouKsXu7NDhxxrH1', '86C3924C5B3DF2BD8D1E3F5D3A3229ABA47472BCF0A332C00F05A33D63D9C60E');
 ```
 
 ### wallet.getNode()
@@ -2899,7 +2899,7 @@ Gets the public and private spend key for the given address.
 #### Example Code
 
 ```js
-wallet.keys('TRTLv1CK8YmPZqRZzhLD9fHJszHKrPpbyaRQSYwH4FscapFN9rd27XZBew5becCWMEQVUwoRAQvi9E6wKPwAM7AufPtRts91Ljh');
+wallet.keys('PLev1CK8YmPZqRZzhLD9fHJszHKrPpbyaRQSYwH4FscapFN9rd27XZBew5becCWMEQVUwoRAQvi9E6wKPwAM7AufPtRts91Ljh');
 ```
 
 ### wallet.keysMnemonic(address)
@@ -2915,7 +2915,7 @@ Gets the mnemonic seed for the given address.
 #### Example Code
 
 ```js
-wallet.keys('TRTLv38Bs9PVUxpDUagenf7RK8YZnJfoS41sNsttLXNj2PQU4Yeoju6Wj3RFwxy2gG81K5ANWtnj6HJSxU8Sba2c2J6V5ugGbah');
+wallet.keys('PLev38Bs9PVUxpDUagenf7RK8YZnJfoS41sNsttLXNj2PQU4Yeoju6Wj3RFwxy2gG81K5ANWtnj6HJSxU8Sba2c2J6V5ugGbah');
 ```
 
 ### wallet.transactions(startHeight, endHeight)
@@ -2964,7 +2964,7 @@ Gets a list of all unconfirmed, outgoing transactions in the wallet container.
 #### Example Code
 
 ```js
-wallet.unconfirmedTransactions('TRTLuyMZMD3HMBk6SeniD7V5xhYtt581KQDQmyQXtD44jaSQcCR3DonjTtQy4iJbysRgVWLuSvCTYhVCxo8xt21kZCSLxFTMyEm');
+wallet.unconfirmedTransactions('PLeuyMZMD3HMBk6SeniD7V5xhYtt581KQDQmyQXtD44jaSQcCR3DonjTtQy4iJbysRgVWLuSvCTYhVCxo8xt21kZCSLxFTMyEm');
 ```
 
 ### wallet.transactionsByAddress(address, startHeight, endHeight)
@@ -2982,7 +2982,7 @@ Returns transactions for the wallet starting at start height for 1,000 blocks, t
 #### Example Code
 
 ```js
-wallet.transactionsByAddress('TRTLv3zoRX86zxYhwvNkx3bdLPFGAPtDgDTe5GGx3Hz6Uv9tRgc8rkpgFAHV2z1Ys9KvXYYvACTm8AGRcSyZ9gc6e7tC4NRTciP', 100000, 250000);
+wallet.transactionsByAddress('PLev3zoRX86zxYhwvNkx3bdLPFGAPtDgDTe5GGx3Hz6Uv9tRgc8rkpgFAHV2z1Ys9KvXYYvACTm8AGRcSyZ9gc6e7tC4NRTciP', 100000, 250000);
 ```
 
 ### wallet.sendBasic(address, amount, paymentId)
@@ -2994,14 +2994,14 @@ This method will take funds from all subwallets as needed, and will use the prim
 |Argument|Mandatory|Description|Format|
 |---|---|---|---|
 |address|Yes|Public wallet address to send transaction to.|string|
-|amount|Yes|Amount of TRTL to send.|number|
+|amount|Yes|Amount of PLE to send.|number|
 |paymentId|No|Payment ID to use for the transaction.|string|
 
 
 #### Example Code
 
 ```js
-wallet.sendBasic('TRTLuycsDuMXGMSKoeFkKwNBmExD81xbmbHpn8qkbha55r7K6NRFVTX47u1qHWNG9XM1iECTgH8oB6Tz2Ayi2iCmDAs7P9Spaf4', 1000000, 'CFFC32C630075C26B92F641C4332FC20A4723690097D3C491F6E0279ED4B430D');
+wallet.sendBasic('PLeuycsDuMXGMSKoeFkKwNBmExD81xbmbHpn8qkbha55r7K6NRFVTX47u1qHWNG9XM1iECTgH8oB6Tz2Ayi2iCmDAs7P9Spaf4', 1000000, 'CFFC32C630075C26B92F641C4332FC20A4723690097D3C491F6E0279ED4B430D');
 ```
 
 ### wallet.sendAdvanced(destinations, mixin, fee, sourceAddresses, paymentId, changeAddress, unlockTime)
@@ -3027,17 +3027,17 @@ Note that every parameters sans destinations is optional.
 const transactionInfo = {
   "destinations": [
     {
-      "address": "TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW",
+      "address": "PLev2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW",
       "amount": 1234
     }
   ],
   "mixin": 3,
   "fee": 10,
   "sourceAddresses": [
-    "TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW"
+    "PLev2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW"
   ],
   "paymentID": "38a8224a4c8bc5f060555cf9e89551dcd0cbb1c587a52b63e98f71280c362ee4",
-  "changeAddress": "TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW",
+  "changeAddress": "PLev2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW",
   "unlockTime": 1200000
 };
 
@@ -3069,7 +3069,7 @@ Sends a fusion transaction.
 #### Example Code
 
 ```js
-wallet.sendFusionAdvanced('TRTLv1dBzjcU5YAfo8vJoHYRaEyWerzWXCPFbHvpSnCCfQpnQcrLePjad6VVyPw5UU7m6xf7y8EX2LFosWKet6gdCZeFSFZjmRB', 3, ['TRTLuxpsYa3ai2P8hVgLQDa4ZA5UQgvjyDfADEmjF5Z2RMqE7CpW1YQbwVo1HTCEpDdfzQR7xKWduSQhC3sYd9ePNYV5h3GsGtm','TRTLuyHC3shdymv8Hb1Nqb3NFREJJXCyyfLQruztwnWLayB3dTfqekZUDmwF4QvSiBRA4XQrd3LEgLNWuTaJtEa8XsgBCbSEWWw']);
+wallet.sendFusionAdvanced('PLev1dBzjcU5YAfo8vJoHYRaEyWerzWXCPFbHvpSnCCfQpnQcrLePjad6VVyPw5UU7m6xf7y8EX2LFosWKet6gdCZeFSFZjmRB', 3, ['PLeuxpsYa3ai2P8hVgLQDa4ZA5UQgvjyDfADEmjF5Z2RMqE7CpW1YQbwVo1HTCEpDdfzQR7xKWduSQhC3sYd9ePNYV5h3GsGtm','PLeuyHC3shdymv8Hb1Nqb3NFREJJXCyyfLQruztwnWLayB3dTfqekZUDmwF4QvSiBRA4XQrd3LEgLNWuTaJtEa8XsgBCbSEWWw']);
 ```
 
 ### wallet.transactionPrivateKey(hash)
@@ -3101,7 +3101,7 @@ wallet.transactionPrivateKey('05372052d1b1ef11b0ea889d4c9389995566f4ba63296d3e11
 #### Example Code
 
 ```js
-wallet.balance('TRTLv1ievFjVyKoTh2VPo12sj5WEiKJmHCDdqpcvU42zMkUvHd6diyW4britmMBXvE5nyHVLdDSiugkbfNnSbo82WrRuiZrdF6k');
+wallet.balance('PLev1ievFjVyKoTh2VPo12sj5WEiKJmHCDdqpcvU42zMkUvHd6diyW4britmMBXvE5nyHVLdDSiugkbfNnSbo82WrRuiZrdF6k');
 ```
 
 ### wallet.balances()
@@ -3153,7 +3153,7 @@ Validate an address. If the address is valid, a 200 response code will be return
 #### Example Code
 
 ```js
-wallet.validateAddress('TRTLuzqYTZM2D8wL1MNbETjPNwQKGz5vFgxnjwc3g8vB1L9bik9Qp6UGLkuEGEv9prS1NAMN9PSepMzrfbVUy6f9QnXM3B44Rxw');
+wallet.validateAddress('PLeuzqYTZM2D8wL1MNbETjPNwQKGz5vFgxnjwc3g8vB1L9bik9Qp6UGLkuEGEv9prS1NAMN9PSepMzrfbVUy6f9QnXM3B44Rxw');
 ```
 
 ### wallet.status()
@@ -3220,7 +3220,7 @@ service.getNodeFeeInfo().then((result) => {
 
 ```javascript
 {
-  "address": "TRTLuxN6FVALYxeAEKhtWDYNS9Vd9dHVp3QHwjKbo76ggQKgUfVjQp8iPypECCy3MwZVyu89k1fWE2Ji6EKedbrqECHHWouZN6g",
+  "address": "PLeuxN6FVALYxeAEKhtWDYNS9Vd9dHVp3QHwjKbo76ggQKgUfVjQp8iPypECCy3MwZVyu89k1fWE2Ji6EKedbrqECHHWouZN6g",
   "amount": 5000
 }
 ```
@@ -3255,7 +3255,7 @@ service.getViewKey().then((result) => {
 
 ```javascript
 service.getSpendKeys({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
+  address: 'PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
 }).then((result) => {
   // do something
 })
@@ -3282,7 +3282,7 @@ service.getSpendKeys({
 
 ```javascript
 service.getMnemonicSeed({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
+  address: 'PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
 }).then((result) => {
   // do something
 })
@@ -3329,8 +3329,8 @@ service.getAddresses().then((result) => {
 
 ```javascript
 [
-  "TRTLux9QBmzCYEGgdWXHEQCAm6vY9vZHkbGmx8ev5LxhYk8N71Pp7PWFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJZ25i9n",
-  "TRTLv1mPerM2ckUuNvxrkzDE7QKd9PFVUXYbVfbvx8YxB5BYEdSqQvUFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJbQMVgF"
+  "PLeux9QBmzCYEGgdWXHEQCAm6vY9vZHkbGmx8ev5LxhYk8N71Pp7PWFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJZ25i9n",
+  "PLev1mPerM2ckUuNvxrkzDE7QKd9PFVUXYbVfbvx8YxB5BYEdSqQvUFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJbQMVgF"
 ]
 ```
 
@@ -3360,7 +3360,7 @@ service.createAddress({
 
 ```javascript
 {
-  "address": "TRTLv3rnGMvAdUUPZZxUmm2jSe8j9U4EfXoAzT3NByLTKD4foK6JuH2FYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJYidUqc"
+  "address": "PLev3rnGMvAdUUPZZxUmm2jSe8j9U4EfXoAzT3NByLTKD4foK6JuH2FYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJYidUqc"
 }
 ```
 
@@ -3376,7 +3376,7 @@ service.createAddress({
 
 ```javascript
 service.deleteAddress({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
+  address: 'PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
 }).then((result) => {
   // do something
 })
@@ -3394,7 +3394,7 @@ service.deleteAddress({
 
 ```javascript
 service.getBalance({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
+  address: 'PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
 }).then((result) => {
   // do something
 })
@@ -3467,8 +3467,8 @@ service.getBlockHashes({
 ```javascript
 service.getTransactionHashes({
   addresses: [
-    "TRTLux9QBmzCYEGgdWXHEQCAm6vY9vZHkbGmx8ev5LxhYk8N71Pp7PWFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJZ25i9n",
-    "TRTLv1mPerM2ckUuNvxrkzDE7QKd9PFVUXYbVfbvx8YxB5BYEdSqQvUFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJbQMVgF"
+    "PLeux9QBmzCYEGgdWXHEQCAm6vY9vZHkbGmx8ev5LxhYk8N71Pp7PWFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJZ25i9n",
+    "PLev1mPerM2ckUuNvxrkzDE7QKd9PFVUXYbVfbvx8YxB5BYEdSqQvUFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJbQMVgF"
   ],
   blockHash: 'f98d6bbe80a81b3aa0aebd004096e2223524f58f347a1f21be122450f244b948',
   blockCount: 1
@@ -3511,8 +3511,8 @@ service.getTransactionHashes({
 ```javascript
 service.getTransactions({
   addresses: [
-    "TRTLux9QBmzCYEGgdWXHEQCAm6vY9vZHkbGmx8ev5LxhYk8N71Pp7PWFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJZ25i9n",
-    "TRTLv1mPerM2ckUuNvxrkzDE7QKd9PFVUXYbVfbvx8YxB5BYEdSqQvUFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJbQMVgF"
+    "PLeux9QBmzCYEGgdWXHEQCAm6vY9vZHkbGmx8ev5LxhYk8N71Pp7PWFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJZ25i9n",
+    "PLev1mPerM2ckUuNvxrkzDE7QKd9PFVUXYbVfbvx8YxB5BYEdSqQvUFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJbQMVgF"
   ],
   firstBlockIndex: 469419,
   blockCount: 1
@@ -3536,7 +3536,7 @@ service.getTransactions({
     "state": 0,
     "timestamp": 1526876765,
     "transactionHash": "d01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751",
-    "address": "TRTLv2MXbzaPYVYqtdNwYpKY7azcVjBjsETN188BpKwi2q83NibqJWtFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJYpcE3D",
+    "address": "PLev2MXbzaPYVYqtdNwYpKY7azcVjBjsETN188BpKwi2q83NibqJWtFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJYpcE3D",
     "amount": 10.5,
     "type": 0,
     "unlockTime": 0,
@@ -3557,7 +3557,7 @@ service.getTransactions({
 
 ```javascript
 service.getUnconfirmedTransactionHashes({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
+  address: 'PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
 }).then((result) => {
   // do something
 })
@@ -3610,7 +3610,7 @@ service.getTransaction({
     "transactionHash": "d01e448f7b631cebd989e3a150258b0da59c66f96adecec392bbf61814310751",
     "transfers": [
       {
-        "address": "TRTLv2MXbzaPYVYqtdNwYpKY7azcVjBjsETN188BpKwi2q83NibqJWtFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJYpcE3D",
+        "address": "PLev2MXbzaPYVYqtdNwYpKY7azcVjBjsETN188BpKwi2q83NibqJWtFYL9CHxpWph2wCPZcJ6tkPfUxVZcUN8xmYsSDJYpcE3D",
         "amount": 10,
         "type": 0
       },
@@ -3641,7 +3641,7 @@ This method creates a transfer object designed to be used with *service.sendTran
 #### Example Code
 
 ```javascript
-var transfer = service.newTransfer('TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ', 1000000)
+var transfer = service.newTransfer('PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ', 1000000)
 ```
 
 ### service.sendTransaction(options)
@@ -3666,7 +3666,7 @@ var transfer = service.newTransfer('TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K
 ```javascript
 service.sendTransaction({
   transfers: [
-    service.newTransfer('TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ', 1000000)
+    service.newTransfer('PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ', 1000000)
   ],
   fee: 0.1,
   mixin: 7,
@@ -3705,7 +3705,7 @@ service.sendTransaction({
 ```javascript
 service.createDelayedTransaction({
   transfers: [
-    service.newTransfer('TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ', 1000000)
+    service.newTransfer('PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ', 1000000)
   ],
   fee: 0.1,
   mixin: 7,
@@ -3797,7 +3797,7 @@ service.sendDelayedTransaction({
 ```javascript
 service.sendFusionTransaction({
   mixin: 7,
-  destinationAddress: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
+  destinationAddress: 'PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
 }).then((result) => {
   // do something
 })
@@ -3826,7 +3826,7 @@ service.sendFusionTransaction({
 service.estimateFusion({
   threshold: 100000000,
   addresses:[
-    'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
+    'PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ'
   ]
 }).then((result) => {
   // do something
@@ -3855,7 +3855,7 @@ service.estimateFusion({
 
 ```javascript
 service.createIntegratedAddress({
-  address: 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ',
+  address: 'PLev1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn7783RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ',
   paymentId: '80ec855eef7df4bce718442cabe086f19dfdd0d03907c7768eddb8eca8c5a667'
 }).then((result) => {
   // do something
@@ -3865,7 +3865,7 @@ service.createIntegratedAddress({
 #### Example Data
 
 ```javascript
-TRTLTyPSXMZB5j2wbztMzRXu2rVCuNVLUb4WKARRZY9ficYWshMDy7p4MXEz24mkyb4KFDVksDj41XTJ4DC3c7P2SfRg3r5q1ve9x7x5tK
+PLeTyPSXMZB5j2wbztMzRXu2rVCuNVLUb4WKARRZY9ficYWshMDy7p4MXEz24mkyb4KFDVksDj41XTJ4DC3c7P2SfRg3r5q1ve9x7x5tK
 
 ```
 
