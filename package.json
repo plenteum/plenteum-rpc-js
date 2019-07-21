@@ -1,6 +1,6 @@
 {
   "name": "plenteum-rpc",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Plenteum RPC API Interface in NodeJS",
   "main": "index.js",
   "scripts": {
