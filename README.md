@@ -2639,7 +2639,7 @@ All of the `wallet-api` commands are exposed via the `wallet` interface. This ut
 
 Some paramters may be *optional* or *required* as documented.
 
-Some of the descriptions of the functions were re-used from @zpalmtree's [Wallet-API Docs](https://github.com/turtlecoin/wallet-api-docs) and are released under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
+Some of the descriptions of the functions were re-used from @zpalmtree's [Wallet-API Docs](https://www.plenteum.com/docs/wallet-api) and are released under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
 
 ### wallet.open = function (filename, password, host, port, ssl)
 
@@ -3166,7 +3166,7 @@ Get the wallet sync status, peer count, and hashrate.
 wallet.status();
 ```
 
-## TurtleService RPC API Interface
+## WalletService RPC API Interface
 
 We expose all of the `wallet-service` RPC API commands via the ```WalletService``` interface. Each of the below methods are [Javascript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises). For safety sake, **always** handle your promise catches as we do use them properly.
 

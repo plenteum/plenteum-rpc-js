@@ -1,6 +1,6 @@
 {
   "name": "plenteum-rpc",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Plenteum RPC API Interface in NodeJS",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,9 @@
     "API"
   ],
   "author": "Brandon Lehmann <brandonlehmann@gmail.com>",
-  "contributors" : [ "Dave Long <support@plenteum.com>" ],
+  "contributors": [
+    "Dave Long <support@plenteum.com>"
+  ],
   "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/plenteum/plenteum-rpc-js/issues"
